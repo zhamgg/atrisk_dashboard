@@ -132,13 +132,13 @@ model = XGBClassifier(
     scale_pos_weight=imbalance_ratio,
     eval_metric='logloss',
     random_state=42,
-    colsample_bytree=0.7,
-    gamma=0.2,
-    max_depth=2,
-    min_child_weight=2,
-    n_estimators=150,
-    subsample=0.8,
-    learning_rate=0.05,
+    colsample_bytree=0.7,  
+    gamma=0.1,  
+    max_depth=4,
+    min_child_weight=2, 
+    n_estimators=150,  
+    subsample=0.8,  
+    learning_rate=0.1, 
 )
 
 model.fit(X_train, y_train)

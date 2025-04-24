@@ -58,13 +58,13 @@ model = XGBClassifier(
     scale_pos_weight=imbalance_ratio,
     eval_metric='logloss',
     random_state=42,
-    colsample_bytree=0.8,
-    gamma=0.1,
-    max_depth=3,
-    min_child_weight=1,
-    n_estimators=100,
-    subsample=1.0,
-    learning_rate=0.1,
+    colsample_bytree=0.7,  
+    gamma=0.1,  
+    max_depth=4,
+    min_child_weight=2, 
+    n_estimators=150,  
+    subsample=0.8,  
+    learning_rate=0.1, 
 )
 
 model.fit(X_train, y_train)
@@ -77,11 +77,11 @@ results_df = pd.DataFrame({
     'CompanyEntityId': company_info['CompanyEntityId'],
     'Termination_Probability': y_full_pred_proba,
     'Risk_Level': pd.cut(y_full_pred_proba, 
-                        bins=[0, 0.3, 0.5, 0.7, 1.0],
+                        bins=[0, 0.2, 0.4, 0.6, 1.0],  # More conservative thresholds
                         labels=['Low', 'Medium', 'High', 'Very High'],
                         include_lowest=True),
     'Actual_Status': company_info['CompanyStatus'],
-    'Prediction_Correct': (y_full_pred_proba >= 0.4) == (company_info['CompanyStatus'] == 'Terminated')
+    'Prediction_Correct': (y_full_pred_proba >= 0.5) == (company_info['CompanyStatus'] == 'Terminated')
 })
 
 # Sort by probability in descending order
