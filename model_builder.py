@@ -1,13 +1,11 @@
 #! /usr/bin/env python3
 
 import pandas as pd
-import streamlit as st
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
-from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix
+from sklearn.metrics import roc_auc_score, confusion_matrix
 import joblib
 import logging
 
@@ -31,9 +29,9 @@ EXPECTED_HEADERS = [
 ]
 
 # preprocessing
-csv_path = 'company_data.csv' 
+csv_path = 'data/company_data.csv' 
 
-df = pd.read_csv('company_data.csv')
+df = pd.read_csv(csv_path)
 
 # Check if number of columns match
 if len(df.columns) != len(EXPECTED_HEADERS):
@@ -163,7 +161,7 @@ post_cutoff_results = pd.DataFrame({
 
 post_cutoff_results = post_cutoff_results.sort_values('Termination_Probability', ascending=False)
 
-post_cutoff_results.to_csv('terminations.csv', index=False)
+post_cutoff_results.to_csv('data/terminations.csv', index=False)
 
 y_pred_proba = model.predict_proba(X_test)[:, 1]
 threshold = 0.5
@@ -180,7 +178,7 @@ logging.info(f"AUC: {auc}, Recall: {recall}, Precision: {precision}, F1: {f1}")
 logging.info(f"True Negatives: {tn}, False Positives: {fp}, False Negatives: {fn}, True Positives: {tp}")
 
 # Save the model
-joblib.dump(model, 'xgb_model.joblib')
+joblib.dump(model, 'data/xgb_model.joblib')
 
 # X_test.to_csv('X_test.csv', index=False)
 #pd.DataFrame(y_test, columns=['target']).to_csv('y_test.csv', index=False)

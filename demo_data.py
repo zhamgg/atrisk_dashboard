@@ -1,16 +1,11 @@
 #! /usr/bin/env python3
 
 import pandas as pd
-import streamlit as st
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
-from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix
-import joblib
 
-csv_path = 'company_data.csv' 
+csv_path = 'data/company_data.csv' 
 
 df = pd.read_csv(csv_path)
 
@@ -93,4 +88,4 @@ results_df = pd.DataFrame({
 results_df = results_df.sort_values('Termination_Probability', ascending=False)
 
 # Save to CSV
-results_df.to_csv('demo_predictions.csv', index=False)
+results_df.to_csv('data/demo_predictions.csv', index=False)

@@ -1,12 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import joblib
-import shap
-from xgboost import plot_importance
-from sklearn.metrics import confusion_matrix, roc_auc_score, precision_score, recall_score, f1_score
-import seaborn as sns
 
 st.set_page_config(layout="wide")
 
@@ -55,7 +49,7 @@ st.title("Termination Risk Prediction Dashboard")
 tab1, tab2 = st.tabs(["2025 Data", "Prior to 2025 Data"])
 
 with tab1:
-    post_cutoff_results = pd.read_csv('terminations.csv')
+    post_cutoff_results = pd.read_csv('data/terminations.csv')
 
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Companies", format(len(post_cutoff_results), ','))
@@ -172,8 +166,7 @@ with tab1:
 
 
 with tab2:
-    results_df = pd.read_csv('demo_predictions.csv')
-    model = joblib.load('xgb_model.joblib')
+    results_df = pd.read_csv('data/demo_predictions.csv')
 
     top_50_high_risk = results_df.head(50)
     success_rate = top_50_high_risk['Prediction_Correct'].mean()
