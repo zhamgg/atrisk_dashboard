@@ -172,11 +172,9 @@ with tab2:
     success_rate = top_50_high_risk['Prediction_Correct'].mean()
     correct_predictions = top_50_high_risk['Prediction_Correct'].sum()
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2 = st.columns(2)
     col1.metric("Total Companies Analyzed", format(len(results_df), ','))
     col2.metric("High/Very High Risk Companies", format(len(results_df[results_df['Risk_Level'].isin(['High', 'Very High'])]), ','))
-    col3.metric("Success Rate in Top 50", f"{success_rate:.2%}")
-    col4.metric("Correct Predictions in Top 50", format(int(correct_predictions), ','))
 
     st.markdown("""
         <div style="background-color: #FFF3CD; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
