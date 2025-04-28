@@ -31,7 +31,8 @@ base_features = [
 
 optimized_features = base_features
 
-df['target'] = (df['CompanyStatus'] == 'Terminated').astype(int)
+df.loc[:, 'target'] = (df['CompanyStatus'].isin(['Terminated', 'InActive'])).astype(int)
+
 
 categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
 

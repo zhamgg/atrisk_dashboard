@@ -58,7 +58,7 @@ with tab1:
     
     st.markdown("""
         <div style="background-color: #FFF3CD; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-            <strong>Note:</strong>  Companies with the Demo and InActive status were dropped from the training data.
+            <strong>Note:</strong>  Companies with the Demo status were dropped from the training data.
         </div>
     """, unsafe_allow_html=True)
     
@@ -178,7 +178,7 @@ with tab2:
 
     st.markdown("""
         <div style="background-color: #FFF3CD; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-            <strong>Note:</strong> Companies with the Demo and InActive status were dropped from the training data.
+            <strong>Note:</strong> Companies with the Demo status were dropped from the training data.
         </div>
     """, unsafe_allow_html=True)
 

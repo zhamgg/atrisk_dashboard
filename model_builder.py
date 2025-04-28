@@ -55,9 +55,8 @@ df = pd.concat([
 logging.info(f"Number of companies after removing duplicates: {len(df)}")
 logging.info(f"Number of duplicate terminated companies removed: {len(pd.read_csv(csv_path)) - len(df)}")
 
-# Filter out demo and InActive companies
+# Filter out demo companies 
 df = df[~df['CompanyStatus'].str.contains('demo', case=False, na=False)]
-df = df[df['CompanyStatus'] != 'InActive']
 
 # Split data into pre-current year and post-current year
 pre_cutoff_mask = df['Year'] < 2025
@@ -80,7 +79,7 @@ pre_cutoff_df = pre_cutoff_df.copy()
 post_cutoff_df = post_cutoff_df.copy()
 
 # Set target using proper indexing
-pre_cutoff_df.loc[:, 'target'] = (pre_cutoff_df['CompanyStatus'] == 'Terminated').astype(int)
+pre_cutoff_df.loc[:, 'target'] = (pre_cutoff_df['CompanyStatus'].isin(['Terminated', 'InActive'])).astype(int)
 
 categorical_cols = pre_cutoff_df.select_dtypes(include=['object']).columns.tolist()
 categorical_cols = [col for col in categorical_cols if col not in ['CompanyName', 'CompanyAlias', 'CompanyEntityId', 'CompanyStatus']]
@@ -129,16 +128,17 @@ imbalance_ratio = y_train.value_counts()[0] / y_train.value_counts()[1]
 
 model = XGBClassifier(
     objective='binary:logistic',
-    scale_pos_weight=imbalance_ratio,
+    scale_pos_weight=imbalance_ratio, 
     eval_metric='logloss',
     random_state=42,
-    colsample_bytree=0.7,  
-    gamma=0.1,  
-    max_depth=4,
-    min_child_weight=2, 
-    n_estimators=150,  
-    subsample=0.8,  
-    learning_rate=0.1, 
+    colsample_bytree=0.6, 
+    max_depth=6,  
+    min_child_weight=1,
+    n_estimators=200,  
+    subsample=0.9,  
+    learning_rate=0.03,  
+    reg_alpha=0.05,  
+    reg_lambda=0.5,  
 )
 
 model.fit(X_train, y_train)
@@ -153,7 +153,7 @@ post_cutoff_results = pd.DataFrame({
     'CompanyEntityId': post_cutoff_company_info['CompanyEntityId'],
     'Termination_Probability': post_cutoff_pred_proba,
     'Risk_Level': pd.cut(post_cutoff_pred_proba, 
-                        bins=[0, 0.3, 0.5, 0.7, 1.0],
+                        bins=[0, 0.2, 0.4, 0.6, 1.0],
                         labels=['Low', 'Medium', 'High', 'Very High'],
                         include_lowest=True),
     'Actual_Status': post_cutoff_company_info['CompanyStatus']
@@ -164,7 +164,7 @@ post_cutoff_results = post_cutoff_results.sort_values('Termination_Probability',
 post_cutoff_results.to_csv('data/terminations.csv', index=False)
 
 y_pred_proba = model.predict_proba(X_test)[:, 1]
-threshold = 0.5
+threshold = 0.25  
 y_pred = (y_pred_proba >= threshold).astype(int)
 
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
